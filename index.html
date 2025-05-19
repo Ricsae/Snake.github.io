@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+    <TITLE>贪吃蛇</TITLE>
+    <meta charset="utf-8" />
+    <META NAME="Generator" CONTENT="EditPlus">
+    <META NAME="Author" CONTENT="">
+    <META NAME="Keywords" CONTENT="">
+    <META NAME="Description" CONTENT="">
+    <link rel="stylesheet" href="style.css">
+</HEAD>
+
+<BODY>
+    <div class="menu" id="menu">
+        <h1 class="menu-title">贪吃蛇</h1>
+        <div class="menu-options">
+            <button class="menu-button" onclick="startGame('normal')">普通模式</button>
+            <button class="menu-button" onclick="startGame('challenge')">挑战模式</button>
+            <button class="menu-button" onclick="showOverlayAndRedirect()">测试专注力</button>
+        </div>
+    </div>
+
+    <div class="score-board" id="scoreBoard" style="display: none;">
+        <h3>分数统计</h3>
+        <p>当前分数: <span id="currentScore">0</span></p>
+        <p>最高分数: <span id="highScore">0</span></p>
+        <p>模式: <span id="gameMode">-</span></p>
+    </div>
+
+    <div class="score">分数：0</div>
+    <div id="game-over-popup" class="hidden">
+        <br><br><br><br><br><br><br><br>
+        <h2>游戏结束</h2>
+        <p>本次得分: <span id="current-score-popup"></span></p>
+        <p>历史最高得分: <span id="high-score-popup"></span></p>
+        <button class="menu-button" onclick="location.reload()">返回主界面</button>
+    </div>
+    <div class="stage"></div>
+
+    <script src="script.js"></script>
+    上下左右控制（键盘操作）<br>
+    可以撞墙，但不可以撞到自己<br><br>
+    普通模式：<br>
+    经典的贪吃蛇<br><br>
+    挑战模式：<br>
+    每吃到一个食物，速度增加少量<br><br>
+    测试专注力：<br>
+    通过舒尔特方格<br>
+    测试你的专注力，看看你多快<br><br>
+</BODY>
+
+</HTML>
