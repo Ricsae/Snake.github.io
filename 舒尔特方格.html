@@ -6,18 +6,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>舒尔特方格游戏</title>
 	<style>
+		/* 全局设置 */
 		* {
 			margin: 0;
 			padding: 0;
+/*设置所有元素的盒模型为border-box，使得元素的宽度和高度包含内边距和边框，但不包含外边距。*/
 			box-sizing: border-box;
 		}
 
+		/* 设置蒙版的样式 */
 		.overlay {
 			position: absolute;
 			top: 0;
 			left: 0;
 			width: 100%;
-			height: 100%;
+			height: 100%;/*全屏幕*/
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -36,33 +39,35 @@
 		}
 
 		body {
-			font-family: Arial, sans-serif;
-			background-color: #f0f2f5;
-			min-height: 100vh;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			padding: 1rem;
+			font-family: Arial, sans-serif;/*字体设置*/
+			background-color: #f0f2f5;/*背景颜色设置*/
+			min-height: 100vh;/*设置页面最小高度为100vh，以适应不同屏幕尺寸*/
+			display: flex;/*flex居中布局*/
+			justify-content: center;/*水平对齐*/
+			align-items: center;/*垂直对齐*/
+			padding: 1rem;/*设置内边距*/
 		}
 
 		.container {
-			background-color: white;
+			background-color: white;/*设置白色背景*/
 			padding: 1rem;
-			border-radius: 10px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;/*界面圆角处理*/
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);/*容器四周阴影处理*/
 			text-align: center;
-			max-width: 100%;
+			max-width: 100%;/*比例设置，防止在小屏幕溢出*/
 			max-height: 100vh;
 			display: flex;
-			flex-direction: column;
+			flex-direction: column;/*垂直显示*/
 		}
 
+		/*标题样式*/
 		h1 {
 			color: #333;
 			margin-bottom: 0.5rem;
 			font-size: 1.5rem;
 		}
 
+		/*简介区*/
 		.introduction {
 			background-color: #f8f9fa;
 			padding: 0.8rem;
@@ -73,23 +78,27 @@
 			font-size: 0.9rem;
 		}
 
+		/*简介区文字设置*/
 		.introduction p {
 			color: #666;
 			line-height: 1.4;
 			margin-bottom: 0.5rem;
 		}
 
+		/*简介中的几点 游戏作用 所在的容器设置*/
 		.introduction ul {
 			list-style-position: inside;
 			color: #666;
 			margin-left: 0.5rem;
 		}
 
+		/*游戏作用具体项设置*/
 		.introduction li {
 			margin-bottom: 0.2rem;
 			line-height: 1.3;
 		}
 
+		/* 当前数字 和 用时 所在容器设置*/
 		.game-info {
 			display: flex;
 			justify-content: space-around;
@@ -98,10 +107,12 @@
 			color: #666;
 		}
 
+		/*"选择方格大小"按钮所在容器设置*/
 		.size-selector {
 			margin-bottom: 0.8rem;
 		}
 
+		/*"选择方块"按钮设置*/
 		.size-selector .button-group {
 			display: flex;
 			justify-content: center;
@@ -109,6 +120,7 @@
 			margin-top: 0.3rem;
 		}
 
+		/* 按钮尺寸设置 */
 		.size-btn {
 			padding: 0.3rem 0.6rem;
 			font-size: 0.9rem;
@@ -119,22 +131,26 @@
 			cursor: pointer;
 		}
 
+		/*指针悬停时按钮效果*/
 		.size-btn:hover {
 			background-color: #e3f2fd;
+			transform: scale(1.05);/*放大以反馈*/
 		}
 
+		/*按钮被选中时的效果*/
 		.size-btn.active {
 			background-color: #2196f3;
 			color: white;
 		}
 
+		/* 按钮不可选中时的设置 */
 		.size-btn:disabled {
 			border-color: #cccccc;
 			color: #cccccc;
 			cursor: not-allowed;
 		}
 
-		.grid {
+		.grid {/*游戏本体区域*/
 			display: grid;
 			gap: 5px;
 			margin-bottom: 0.8rem;
@@ -144,102 +160,115 @@
 			margin-right: auto;
 		}
 
+		/*方格默认设置*/
 		.cell {
 			width: 40px;
-			height: 40px;
+			height: 40px;/*方格宽度和高度设置*/
 			background-color: #e3e3e3;
 			border: none;
-			border-radius: 5px;
+			border-radius: 5px;/*圆角处理，使方块更柔和*/
 			font-size: 1.2rem;
-			cursor: pointer;
-			transition: all 0.3s ease;
+			cursor: pointer;/*鼠标悬停时改变指针样式为手型（食指）*/
+			transition: all 0.3s ease;/*为所有变化留出0.3s缓冲时间以更好播放动画*/
 			display: flex;
 			justify-content: center;
 			align-items: center;
 		}
 
+		/*灰色蒙版，指针悬停时方块变灰*/
 		.cell:hover {
 			background-color: #d0d0d0;
+			transform: scale(1.05);/*放大以反馈*/
 		}
 
+		/*方块被正确点击时颜色变 绿 ，字体设为白色*/
 		.cell.correct {
 			background-color: #4caf50;
 			color: white;
+			transform: scale(0.95);/*缩小以模拟点击反馈*/
 		}
 
+		/*方块被错误点击时颜色变 红 ，字体设为白色*/
 		.cell.wrong {
 			background-color: #f44336;
 			color: white;
+			transform: scale(0.95);/*缩小以反馈点击*/
 		}
 
+		/*功能性按钮格式*/
 		.button-container {
-			display: flex;
-			justify-content: center;
-			gap: 1rem;
+			display: flex;/*使用flex布局*/
+			justify-content: center;/*按钮居中*/
+			gap: 1rem;/*16px的间距*/
 		}
 
 		button {
-			padding: 0.5rem 1rem;
-			font-size: 0.9rem;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-			transition: background-color 0.3s ease;
+			padding: 0.5rem 1rem;/*按钮尺寸*/
+			font-size: 0.9rem;/*设置文本大小*/
+			border: none;/*使用无边框按钮*/
+			border-radius: 5px;/*圆角处理*/
+			cursor: pointer;/*鼠标悬停时变为手指（食指）*/
+			transition: background-color 0.3s ease;/*0.3秒动画缓冲时间*/
 		}
 
+		/*开始按钮样式*/
 		#start-btn {
-			background-color: #2196f3;
-			color: white;
+			background-color: #2196f3;/*底色*/
+			color: white;/*文字颜色*/
 		}
 
+		/*重置按钮样式*/
 		#reset-btn {
-			background-color: #9e9e9e;
-			color: white;
+			background-color: #9e9e9e;/*底色*/
+			color: white;/*文字颜色*/
 		}
 
+		/*按钮悬停样式*/
 		button:hover {
-			opacity: 0.9;
+			opacity: 0.9;/*将不透明度设置为0.9（微微变色）*/
 		}
 
+		/*按钮禁用样式*/
 		button:disabled {
-			background-color: #cccccc;
-			cursor: not-allowed;
+			background-color: #cccccc;/*背景设为灰色*/
+			cursor: not-allowed;/*将指针设置为 禁止 （圈内斜杠）*/
 		}
 
-		@media (max-width:480px) {
+		/* 显示适配 */
+		@media (max-width:480px) {/*调整各容器尺寸以适配手机或小屏幕用户*/
 			.container {
-				padding: 0.8rem;
+				padding: 0.8rem;/*调整页面主容器大小*/
 			}
 
 			h1 {
-				font-size: 1.3rem;
+				font-size: 1.3rem;/*调整标题字体大小*/
 			}
 
-			.introduction {
+			.introduction {/*调整游戏介绍尺寸*/
 				padding: 0.6rem;
 				font-size: 0.8rem;
 			}
 
-			.game-info {
+			.game-info {/*调整 "当前数字" 和 "用时" 字体大小*/
 				font-size: 0.9rem;
 			}
 
-			.size-btn {
+			.size-btn {/*方格尺寸选择按钮大小调整*/
 				padding: 0.2rem 0.4rem;
 				font-size: 0.8rem;
 			}
 
-			.cell {
+			.cell {/*游戏本体方格大小调整*/
 				width: 35px;
 				height: 35px;
 				font-size: 1rem;
 			}
 
-			.button-container {
+			.button-container {/*按钮容器间距调整*/
 				gap: 0.8rem;
 			}
 
-			button {
+			button {/*减小所有按钮内边距和字体大小*/
 				padding: 0.4rem 0.8rem;
 				font-size: 0.8rem;
 			}
@@ -248,6 +277,7 @@
 </head>
 
 <body>
+	<!-- 提示 -->
 	<div class="container">
 		<h1>舒尔特方格游戏</h1>
 		<div class="introduction">
@@ -284,11 +314,14 @@
 		</div>
 	</div>
 	<script>
+		// 显示转场动画并跳转至贪吃蛇主页
 		function showOverlayAndRedirect() {
+			//创建遮盖
 			const overlay = document.createElement('div');
 			overlay.classList.add('overlay');
 			document.body.appendChild(overlay);
 
+			//暂停一段时间以保证转场动画正常播放
 			setTimeout(() => {
 				overlay.classList.add('fade-out');
 			}, 10);
@@ -297,105 +330,140 @@
 				window.location.href = 'index.html';
 			}, 1000);
 		}
+		// 舒尔特方格游戏本体
 		class SchulteGame {
 			constructor() {
-				this.grid = document.getElementById('grid');
-				this.currentNumber = document.getElementById('current-number');
-				this.timer = document.getElementById('timer');
-				this.startBtn = document.getElementById('start-btn');
-				this.resetBtn = document.getElementById('reset-btn');
-				this.introduction = document.querySelector('.introduction');
-				this.sizeButtons = document.querySelectorAll('.size-btn');
-				this.numbers = [];
-				this.currentIndex = 1;
-				this.gameStarted = false;
-				this.timerInterval = null;
-				this.startTime = null;
-				this.lastTime = 0;
+				// 获取元素
+				this.grid = document.getElementById('grid');//游戏界面容器
+				this.currentNumber = document.getElementById('current-number');//获取当前数字
+				this.timer = document.getElementById('timer');//计时器显示
+				this.startBtn = document.getElementById('start-btn');//开始按钮
+				this.resetBtn = document.getElementById('reset-btn');//重置按钮
+				this.introduction = document.querySelector('.introduction');//游戏介绍
+				this.sizeButtons = document.querySelectorAll('.size-btn');//方格大小获取
+				//初始化游戏变量
+				this.numbers = [];// 存储随机生成的数字
+				this.currentIndex = 1;//存储当前数字
+				this.gameStarted = false;//游戏开始标记
+				this.timerInterval = null;//计时器间隔设置为0（毫秒计时器）
+				this.startTime = null;//游戏开始时间戳
+				this.lastTime = 0;//最后一次更新计时器的时间戳
+				
+				//初始化输入监听器
 				this.initializeEventListeners();
 			}
 
+			//初始化所有监听器（重置所有输入状态）
 			initializeEventListeners() {
+				// 监听"开始"按钮点击
 				this.startBtn.addEventListener('click', () => this.startGame());
+				
+				// 监听"重置"按钮点击
 				this.resetBtn.addEventListener('click', () => this.resetGame());
+
+				// 监听"方格大小"按钮点击
 				this.sizeButtons.forEach((button) => {
 					button.addEventListener('click', () => {
-						this.setActiveSize(button);
-						if (this.gameStarted) {
+						this.setActiveSize(button);//将网格框架大小按照当前选中按钮设置
+						if (this.gameStarted) {//如果游戏已开始则重置游戏
 							this.startGame();
 						}
 					});
 				});
 			}
 
+			// 设置当前选中的框架大小
 			setActiveSize(activeButton) {
+				//重置按钮状态
 				this.sizeButtons.forEach((button) => {
-					button.classList.remove('active');
+					button.classList.remove('active');//移除当前的按钮状态
 				});
-				activeButton.classList.add('active');
+				activeButton.classList.add('active');//添加当前按钮状态
 			}
 
+			//获取当前框架大小
 			getGridSize() {
 				const activeButton = document.querySelector('.size-btn.active');
-				return parseInt(activeButton.dataset.size);
+				return parseInt(activeButton.dataset.size);//返回数字总数
 			}
 
+			//生成乱序数组
 			generateNumbers() {
-				const size = this.getGridSize();
-				const totalNumbers = size * size;
+				const size = this.getGridSize();//获取当前框架大小
+				const totalNumbers = size * size;//计算总方格数（n*n）
+
+				// 用Array.from()方法创建一个长度为totalNumbers的数组，并用数字填充
 				this.numbers = Array.from({ length: totalNumbers }, (_, i) => i + 1);
+				// 随机打乱数组（使用洗牌算法）
+				//相比于直接使用Math.random()方法
+				//使用洗牌算法可以更好的随机生成数字序列
 				for (let i = this.numbers.length - 1; i > 0; i--) {
 					const j = Math.floor(Math.random() * (i + 1));
 					[this.numbers[i], this.numbers[j]] = [this.numbers[j], this.numbers[i]];
-				}
+				}//算法原理是将数组从后往前遍历
+				// 随机选取一个位置与当前位置的元素交换
+				// 直到遍历完成，从而达到创建乱序数组的目的。
 			}
 
+			//创建游戏框架
 			createGrid() {
-				const size = this.getGridSize();
+				const size = this.getGridSize();//获取框架大小
+
+				//设置方格列数
 				this.grid.style.gridTemplateColumns = `repeat(${size},1fr)`;
-				this.grid.innerHTML = '';
+				this.grid.innerHTML = '';//清空框架状态
+
+				//为每个数字创建方格
 				this.numbers.forEach((number) => {
 					const cell = document.createElement('button');
 					cell.className = 'cell';
 					cell.textContent = number;
 					cell.dataset.number = number;
+
+					//添加点击事件
 					cell.addEventListener('click', () => this.handleCellClick(cell));
+					//将方格添加到框架
 					this.grid.appendChild(cell);
 				});
 			}
 
-			startGame() {
-				this.generateNumbers();
-				this.createGrid();
+			startGame() {     // 开始游戏函数
+				this.generateNumbers();//生成乱序数组
+				this.createGrid();//创建游戏框架
+				//初始化游戏状态
 				this.gameStarted = true;
 				this.currentIndex = 1;
-				this.startBtn.disabled = true;
-				this.resetBtn.disabled = false;
+				//更新ui界面
+				this.startBtn.disabled = true;//禁用开始按钮
+				this.resetBtn.disabled = false;//启用重开按钮
 				this.sizeButtons.forEach((button) => {
-					button.disabled = false;
+					button.disabled = true;//禁用框架大小选择按钮
 				});
-				this.startTime = performance.now();
-				this.lastTime = this.startTime;
-				this.updateTimer();
-				this.timerInterval = requestAnimationFrame(() => this.animateTimer());
-				this.introduction.style.display = 'none';
+				this.startTime = performance.now();//记录游戏开始时间戳
+				this.lastTime = this.startTime;//记录最后一次更新计时器的时间戳
+				this.updateTimer();//更新计时器动
+				this.timerInterval = requestAnimationFrame(() => this.animateTimer());//开始计时器动画
+				this.introduction.style.display = 'none';//隐藏游戏介绍
 				this.currentNumber.textContent = '1'; // 确保重新开始时显示1
 			}
 
-			resetGame() {
-				if (this.timerInterval) {
+			// 重新开始函数
+			resetGame() {   
+				if (this.timerInterval) {  // 清除定时器
 					cancelAnimationFrame(this.timerInterval);
 				}
 				this.startGame();
 			}
 
-			animateTimer() {
+			// 计时器动画（使用浏览器的requestAnimationFrame以实现更丝滑的效果）
+			animateTimer() {  
 				if (!this.gameStarted) return;
 
 				this.updateTimer();
 				this.timerInterval = requestAnimationFrame(() => this.animateTimer());
 			}
 
+			// 更新计时器函数
 			updateTimer() {
 				if (!this.startTime) return;
 
@@ -405,22 +473,24 @@
 				this.lastTime = now;
 			}
 
+			// 方块点击
 			handleCellClick(cell) {
-				if (!this.gameStarted) return;
+				if (!this.gameStarted) return;// 若游戏未开始，则不响应点击事件
 
-				const number = parseInt(cell.dataset.number);
+				const number = parseInt(cell.dataset.number);// 获取被点击方块上的数字
+				// 若点击的数字与当前数字相同，则加分并更新当前数字
 				if (number === this.currentIndex) {
-					cell.classList.add('correct');
-					this.currentIndex++;
+					cell.classList.add('correct');// 将方格状态设置为正确
+					this.currentIndex++;// 更新当前数字
 
 					// 当点击到最后一个数字时
 					if (this.currentIndex > this.numbers.length) {
 						this.currentNumber.textContent = '已完成';
 						this.gameWon();
-					} else {
+					} else {// 更新 当前数字 显示
 						this.currentNumber.textContent = this.currentIndex;
 					}
-				} else {
+				} else {//点击数字与当前数字不同，使方块变红
 					cell.classList.add('wrong');
 					setTimeout(() => {
 						cell.classList.remove('wrong');
@@ -428,16 +498,18 @@
 				}
 			}
 
+			// 游戏结束函数
 			gameWon() {
-				cancelAnimationFrame(this.timerInterval);
-				this.gameStarted = false;
-				this.startBtn.disabled = false;
-				this.resetBtn.disabled = false;
+				cancelAnimationFrame(this.timerInterval);//停止计时动画
+				this.gameStarted = false;//将游戏状态设置为未开始
+				this.startBtn.disabled = false;//启用开始按钮
+				this.resetBtn.disabled = true;//禁用重开按钮
+				// 启用框架大小选择按钮
 				this.sizeButtons.forEach((button) => {
 					button.disabled = false;
 				});
 
-				// 使用游戏结束模态框替代alert
+				// 使用浏览器自带alert提示框提示游戏结束
 				const finalTime = parseFloat(this.timer.textContent).toFixed(3);
 				alert(`恭喜你完成游戏！用时：${finalTime}秒`);
 			}
